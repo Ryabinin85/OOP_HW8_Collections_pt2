@@ -1,7 +1,6 @@
 package passport;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Passport {
@@ -10,30 +9,20 @@ public class Passport {
     private final String surname;
     private final String name;
     private final String patronymic;
-    private final Map<Integer, Passport> passportMap = new HashMap<>();
+    private final LocalDate birthDay;
 
-    public Passport(Integer number, String surname, String name, String patronymic) {
+
+    public Passport(Integer number, String surname, String name, String patronymic, LocalDate birthDay) {
         if (number != null && surname != null && name != null &&
                 !surname.isBlank() && !surname.isEmpty() &&
-                !name.isBlank() && !name.isEmpty()) {
+                !name.isBlank() && !name.isEmpty() && birthDay != null) {
             this.number = number;
             this.surname = surname;
             this.name = name;
+            this.birthDay = birthDay;
         } else
             throw new RuntimeException("Данные не заполнены");
         this.patronymic = patronymic;
-    }
-
-    public void add(Passport passport) {
-        passportMap.put(passport.getNumber(), new Passport(passport.getNumber(), passport.getSurname(), passport.getName(), passport.getPatronymic()));
-    }
-
-    public Passport getPassport(Integer number) {
-        return passportMap.get(number);
-    }
-
-    public Map<Integer, Passport> getPassportMap() {
-        return passportMap;
     }
 
     public Integer getNumber() {
@@ -52,29 +41,27 @@ public class Passport {
         return patronymic;
     }
 
+    public LocalDate getBirthDay() {
+        return birthDay;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Passport passport = (Passport) o;
         return Objects.equals(number, passport.number) && Objects.equals(surname, passport.surname) &&
-                Objects.equals(name, passport.name) && Objects.equals(patronymic, passport.patronymic) &&
-                Objects.equals(passportMap, passport.passportMap);
+                Objects.equals(name, passport.name) && Objects.equals(patronymic, passport.patronymic);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(number, surname, name, patronymic, passportMap);
+        return Objects.hash(number, surname, name, patronymic);
     }
 
     @Override
     public String toString() {
-        return "Passport{" +
-                "number=" + number +
-                ", surname='" + surname + '\'' +
-                ", name='" + name + '\'' +
-                ", patronymic='" + patronymic + '\'' +
-                ", passportMap=" + passportMap +
-                '}';
+        return "Паспорт №:" + number + "\n" + surname + " " + name + " " + patronymic + "\n" +
+                "Дата рождения: " + birthDay;
     }
 }
